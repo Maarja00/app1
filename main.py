@@ -7,13 +7,13 @@ import os
 template = """
  You are a marketing copywriter with 20 years of experience. You are analyzing customer's background to write personalized product description that only this customer will receive; 
     PRODUCT input text: {content};
-    CUSTOMER work profession (y): {workprofession};
-    CUSTOMER brand preference: {brandpreference};
-    TASK: Write a product description that is tailored into this customer's Work profession and brand preference. Use work profession specific slang.;
+    CUSTOMER brand preference (y): {brandpreference};
+    CUSTOMER main work profession: {workprofession};
+    TASK: Write a product description that is tailored into this customer's brand preference and work profession. Use work profession specific slang.;
     FORMAT: Present the result in the following order: (PRODUCT DESCRIPTION), (BENEFITS), (USE CASE);
     PRODUCT DESCRIPTION: describe the product in 5 sentences;
-    BENEFITS: describe in 3 sentences why this product is perfect considering customers work profession and brand preference;
-    USE CASE: write a story in 5 sentences, of an example weekend activity taking into account brand preference {brandpreference} and work profession {workprofession}, write a story in first person, example "I started my Saturday morning with ...";
+    BENEFITS: describe in 3 sentences why this product is perfect considering customers brand preference and work profession;
+    USE CASE: write a story in 5 sentences, of an example weekend activity taking into account work profession {workprofession} and brand preference {brandpreference}, write a story in first person, example "I started my Saturday morning with ...";
 """
 
 prompt = PromptTemplate(
@@ -34,7 +34,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("Otstarve: tootetutvustustekstide personaliseerimine igale kliendile või kliendigruppidele; väljundtekst on kohandatud kliendi a) brändieelistuse ja b) ametipositsiooniga; sisendtekstiks on neutraalses vormis tootekirjeldus. \
-    \n\n Kasutusjuhend: 1) valmista ette tootekirjeldus (sisendtekst). 2) määra tarbijasegemendid lähtuvalt vanuserühma ja brändieelistuse kombinatsioonidest. 3) sisesta ükshaaval tarbijasegmentide lõikes eeltoodud info äpi kasutajaliideses, saada ära. \
+    \n\n Kasutusjuhend: 1) valmista ette tootekirjeldus (sisendtekst). 2) määra tarbijasegemendid lähtuvalt brändieelistuse ja ametipositsioonide kombinatsioonidest. 3) sisesta ükshaaval tarbijasegmentide lõikes eeltoodud info äpi kasutajaliideses, saada ära. \
     4) kopeeri ükshaaval tarbijasegmentide lõikes äpi väljundteksti kõnealuse toote tutvustuslehele.")
 
 with col2:
@@ -55,9 +55,9 @@ openai_api_key = get_api_key()
 col1, col2 = st.columns(2)
 with col1:
     option_brandpreference = st.selectbox(
-        'Which brand would you prefer?',
-        ('Apple', 'Samsung', 'Huawei', 'Xiaomi', 'Motorola', 'Nokia', 'Poco')
-    
+        'Which brand would you prefer your content to target?',
+        ('Apple', 'Samsung', 'Huawei', 'Xiaomi', 'Motorola', 'Nokia', 'Poco'))
+
 def get_workprofession():
     input_text = st.text_input(label="Customers work profession", key="workprofession_input")
     return input_text
@@ -76,7 +76,7 @@ if len(content_input.split(" ")) > 700:
 
 def update_text_with_example():
     print ("in updated")
-    st.session_state.content_input = "t shirts, all clolors, cotton, responsible manufacturing"
+    st.session_state.content_input = "brands, all models, all colours, the best camera, battery saving)"
 
 st.button("*GENERATE TEXT*", type='secondary', help="Click to see an example of the content you will be converting.", on_click=update_text_with_example)
 
@@ -89,9 +89,8 @@ if content_input:
 
     llm = load_LLM(openai_api_key=openai_api_key)
 
-    prompt_with_content = prompt.format(brandpreference=option_brandpreference, workposition=workposition_input, content=content_input)
+    prompt_with_content = prompt.format(brandpreference=option_brandpreference, workprofession=workprofession_input, content=content_input)
 
     formatted_content = llm(prompt_with_content)
 
     st.write(formatted_content)
-
