@@ -58,7 +58,7 @@ with col1:
         'Which brand would you prefer?',
         ('Apple', 'Samsung', 'Huawei', 'Xiaomi', 'Motorola', 'Nokia', 'Poco')
     
-def get_hobby():
+def get_workprofession():
     input_text = st.text_input(label="Customers work profession", key="workprofession_input")
     return input_text
 
@@ -94,3 +94,4 @@ if content_input:
     formatted_content = llm(prompt_with_content)
 
     st.write(formatted_content)
+
