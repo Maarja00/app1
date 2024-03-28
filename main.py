@@ -70,8 +70,8 @@ def get_text():
 
 content_input = get_text()
 
-if len(content_input.split(" ")) > 700:
-    st.write("Please enter a shorter content. The maximum length is 700 words.")
+if len(content_input.split(" ")) > 1000:
+    st.write("Please enter a shorter content. The maximum length is 1000 words.")
     st.stop()
 
 def update_text_with_example():
